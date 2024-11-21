@@ -1,0 +1,80 @@
+### Preguntas de análisis
+
+#### A. ¿Qué pasaría si se pierde la referencia de un objeto de tipo Persona?
+
+En teoría, cuando se ejecute el garbage collector, se debería imprimir el mensaje que se programó en el método ```finalize```:
+
+```java
+System.out.println("Matando a: " + nombre);
+```
+
+Sin embargo, el tiempo de ejecución del programa es tan corto que no llega a invocarse el garbage collector. El mensaje que se imprime en pantalla viene de habe invocado manualmente el método ```finalize```. 
+
+#### B. ¿Cómo podríamos conocer el nombre del dueno de la variable auto de la línea 11 del método main?
+
+Dado que se se invocó al único constructor con 3 argumentos (hay varios por sobrecarga), en el orden placa, motor y persona, es el tercer argumento de la linea 11 el dueno de la variable auto. 
+
+En este caso es ```personas[4]```, una ubicacion dentro del objeto personas, que fue definida con una lista de cadenas en la línea 4:
+
+```java
+String[] nombres = {"Alejandro", "Jaime", "Daniel", "Santiago", "Alexander"};
+```
+
+La cuarta posición (contando desde cero) contiene la cadena ```"Alexander"```, siendo este el dueno del auto.
+
+#### C. ¿De qué manera podemos agregar un dueno al Vehículo de la línea 13 del método main?
+
+Existen dos formas:
+
+- La primera es agregando un argumento de clase Persona después la placa y el motor.
+- La segunda es invocando el método setDueno, agregando como argumento un objeto de la clase Persona.
+
+No es posible asignarla directamente desde el main porque la variable es privada.
+
+#### D. Usando la variable auto2 de la línea 13 del método main, obtenga el valor del atributo velocidadMáxima del motor del vehiculo. Adjunte su propuesta
+
+Mi solución fue invocar el metodo que retorna el objeto motor que es atributo del objeto auto, para luego a su vez invocar el método .getVelocidadMaxima(), ya que la velocidad máxima se definió como atributo privado.
+
+```java
+System.out.println(auto2.getMotor().getVelocidadMaxima());
+```
+
+#### E. Suponga que, al momento de perder la referencia al objeto, se borra del sistema, es decir el garbage collector es muy eficiente, ¿Qué imprimiría al ejecutar el método main por consola?
+
+En ese caso, debería responder instantáneamente a las siguientes líneas:
+
+```java
+personas[0] = null; //15
+personas[4] = null; //17
+```
+
+Imprimiendo por cada una el mensaje definido como retorno del método ```finalize```.
+
+#### F. ¿Qué ocurre al momento de ejecutar la siguiente línea después de la línea 16? Explique
+
+```java
+System.out.println(personas[1])
+```
+
+Se definió anteriormente que ```personas[1]``` apunta al mismo lugar que ```personas[2]```, así que se imprimirá el retorno de  ```toString()``` con el tercer nombre en la lista: ```"Soy Daniel"```.
+
+#### G. ¿Qué modificación al código debo hacer para que al momento de ejecutar ```System.out.println(auto2)```, me aparezca la placa del vehículo y el dueno del vehículo?
+
+Se debe crear un método público ```toString()```  dentro de la clase Vehiculo que retorne los datos necesarios, un ejemplo sería:
+
+```java
+public String toString() {
+	return placa + "de" + dueno;
+}
+```
+
+#### H. Usando la variable auto de la línea 11 del método main, y usando el atributo dueno, asigne de mejorAmigo al tercer elemento del listado personas. Adjunte su propuesta.
+
+```java
+Vehiculo auto = new Vehiculo("ABC-306", Motor.ELECTRICO, personas[4]);
+
+//respuesta
+auto.getDueno().setMejorAmigo(personas[2]);
+
+System.out.println(personas[4].getMejorAmigo()); //retorna "Soy Daniel"
+```
